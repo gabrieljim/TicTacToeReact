@@ -47,6 +47,7 @@ class Game extends React.Component {
             squares:Array(9).fill(null),
             xTurn: true,
             win: false,
+            draw: false,
         }
     }
 
@@ -60,6 +61,7 @@ class Game extends React.Component {
             squares: tempArray,
             xTurn: !this.state.xTurn,
             win: this.anyWinYet(tempArray),
+            draw: this.draw(tempArray)
         })
     }
 
@@ -78,9 +80,18 @@ class Game extends React.Component {
         for (let i = 0; i < positions.length; i++){
             const [a,b,c] = positions[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
-                return squares[a];
+                return ("El ganador es " + squares[a]);
             }
         }
+    }
+
+    draw(squares) {
+        for (let i = 0; i < squares.length; i++) {
+            if (!squares[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     reset() {
@@ -88,15 +99,18 @@ class Game extends React.Component {
             squares:Array(9).fill(null),
             xTurn: true,
             win: false,
+            draw:false,
         })
     }
 
     render() {
-        let end = "El ganador es " + this.state.win;
         let nextPlayer = this.state.xTurn ? 'X' : 'O';
         let message = ""
         if (this.state.win){
-            message = end;
+            message = this.state.win;
+        }
+        else if (this.state.draw) {
+            message = "Es un empate";
         }
         else {
             message = "Siguiente en jugar: " + nextPlayer;
