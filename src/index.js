@@ -4,8 +4,8 @@ import './index.css';
 
 function Square(props) {
     return(
-        <button className="square">
-            {props.value}
+        <button className="square" onClick={props.onClick}>
+            <span>{props.value}</span>
         </button>
     )
 }
@@ -13,7 +13,7 @@ function Square(props) {
 class Board extends React.Component {
     renderSquare(i) {
         return(
-            <Square id={i} value={this.props.squares[i]} onClick={(i) => this.props.onClick(i)}/>
+            <Square id={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)}/>
         )
     }
 
@@ -43,21 +43,70 @@ class Board extends React.Component {
 class Game extends React.Component {
     constructor(props) {
         super(props);
-        let testArray=Array(9).fill(null);
-        testArray[4]="X";
         this.state = {
-            squares: testArray,
+            squares:Array(9).fill(null),
             xTurn: true,
+            win: false,
         }
     }
 
     handleClick(i) {
-        return;
+        if (this.state.squares[i] || this.state.win) {
+            return;
+        }
+        let tempArray = this.state.squares.slice()
+        tempArray[i] = this.state.xTurn ? 'X' : 'O';
+        this.setState({
+            squares: tempArray,
+            xTurn: !this.state.xTurn,
+            win: this.anyWinYet(tempArray),
+        })
+    }
+
+    anyWinYet(squares){
+        let positions = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6],
+        ] 
+
+        for (let i = 0; i < positions.length; i++){
+            const [a,b,c] = positions[i];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
+                return squares[a];
+            }
+        }
+    }
+
+    reset() {
+        this.setState({
+            squares:Array(9).fill(null),
+            xTurn: true,
+            win: false,
+        })
     }
 
     render() {
+        let end = "El ganador es " + this.state.win;
+        let nextPlayer = this.state.xTurn ? 'X' : 'O';
+        let message = ""
+        if (this.state.win){
+            message = end;
+        }
+        else {
+            message = "Siguiente en jugar: " + nextPlayer;
+        }
         return(
-            <Board squares={this.state.squares} onClick={(i) => this.handleClick(i)}/>
+            <div id="juego">
+                <Board squares={this.state.squares} onClick={(i) => this.handleClick(i)}/>
+                <h1>{message}</h1>
+                <button onClick={() => this.reset()}><h4>Volver a empezar</h4></button> 
+            </div>
         )
     }
 }

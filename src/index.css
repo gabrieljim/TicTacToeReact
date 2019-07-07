@@ -13,14 +13,20 @@ code {
 }
 
 .square {
-    font-size:30px;
+    font-size:50px;
     padding:10px;
     width:80px;
     height:80px;
     background-color:white;
     border:1px solid black;
     margin:0;
-    position:relative;
+    float:left;
+}
+
+.row:after {
+    clear:both;
+    content:"";
+    display:table;
 }
 
 .row{
