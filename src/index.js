@@ -4,7 +4,7 @@ import './index.css';
 
 function Square(props) {
     return(
-        <button className="square" onClick={props.onClick}>
+        <button id={props.id} className="square" onClick={props.onClick}>
             <span>{props.value}</span>
         </button>
     )
@@ -79,7 +79,13 @@ class Game extends React.Component {
 
         for (let i = 0; i < positions.length; i++){
             const [a,b,c] = positions[i];
+            document.getElementById(a).style.color='black';
+            document.getElementById(b).style.color='black';
+            document.getElementById(c).style.color='black';
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]){
+                document.getElementById(a).style.color='green';
+                document.getElementById(b).style.color='green';
+                document.getElementById(c).style.color='green';
                 return ("El ganador es " + squares[a]);
             }
         }
